@@ -19,10 +19,15 @@ app = FastAPI(
     version="1.0.0"
 )
 
+origins = [
+    "https://final-wallet-web-app.vercel.app",  # Replace with your actual Vercel URL
+    "http://localhost:3000"  # Keep this for local development
+]
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL
+    allow_origins=origins,  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
