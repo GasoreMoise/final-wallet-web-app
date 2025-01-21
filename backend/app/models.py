@@ -33,7 +33,7 @@ class Account(Base):
     currency = Column(String, default="USD")
     description = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
 
     owner = relationship("User", back_populates="accounts")
     transactions = relationship("Transaction", back_populates="account")

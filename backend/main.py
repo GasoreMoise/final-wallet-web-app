@@ -20,20 +20,17 @@ app = FastAPI(
 )
 
 origins = [
-    "https://final-wallet-web-app.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173",  # Vite default development port
-    "https://final-wallet-web-app-1.onrender.com"  # Backend URL for same-origin requests
+    "https://final-wallet-web-app.vercel.app",  # Replace with your actual Vercel URL
+    "http://localhost:3000"  # Keep this for local development
 ]
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins,  # Frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"]
 )
 
 # Include routers

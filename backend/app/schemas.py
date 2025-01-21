@@ -33,11 +33,10 @@ class UserResponse(UserBase):
 
 class AccountBase(BaseModel):
     name: str
-    balance: float
+    balance: Decimal
     currency: str = 'USD'
     type: AccountType = AccountType.BANK
     description: Optional[str] = None
-    owner_id: Optional[int] = None
 
 class AccountCreate(AccountBase):
     pass
