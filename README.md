@@ -120,6 +120,6 @@ npm start
 
 MIT License
 
-## Author
-
-Created by Cascade AI for Eric @ Code of Africa GmbH
+Links:
+Backend:https://final-wallet-web-app-1.onrender.com
+Frontend:https://final-wallet-web-app.vercel.app/categories
