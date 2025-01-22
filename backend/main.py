@@ -29,10 +29,12 @@ origins = [
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Frontend URL
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=["Content-Type", "Authorization", "Accept"],
+    expose_headers=["Content-Type", "Authorization"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
 
 # Include routers
