@@ -143,7 +143,7 @@ export const API_ENDPOINTS = {
   },
   CATEGORIES: {
     BASE: '/api/categories',
-    BY_ID: (id: number) => `.api/categories/${id}`,
+    BY_ID: (id: number) => `/api/categories/${id}`,
   },
   BUDGETS: {
     BASE: '/api/budgets',
@@ -153,5 +153,6 @@ export const API_ENDPOINTS = {
     GENERATE: '/api/reports',
     MONTHLY: '/api/reports/monthly',
     CATEGORY: '/api/reports/category',
+    DASHBOARD: '/api/reports/dashboard'
   },
 } as const;
