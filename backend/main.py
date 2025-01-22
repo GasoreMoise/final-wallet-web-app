@@ -20,8 +20,10 @@ app = FastAPI(
 )
 
 origins = [
-    "https://final-wallet-web-app-git-main-gasore-nshuti-moises-projects.vercel.app/",  # Replace with your actual Vercel URL
-    "http://localhost:3000"  # Keep this for local development
+    "https://final-wallet-web-app-git-main-gasore-nshuti-moises-projects.vercel.app",  # Vercel deployment URL
+    "https://final-wallet-web-app.vercel.app",  # Production Vercel URL
+    "https://final-wallet-web-app-1.onrender.com",  # Render backend URL
+    "http://localhost:3000"  # Local development
 ]
 
 # Configure CORS
