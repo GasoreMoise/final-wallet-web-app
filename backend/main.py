@@ -20,7 +20,7 @@ app = FastAPI(
 )
 
 origins = [
-    "https://final-wallet-web-app.vercel.app",  # Replace with your actual Vercel URL
+    "https://final-wallet-web-app-git-main-gasore-nshuti-moises-projects.vercel.app/",  # Replace with your actual Vercel URL
     "http://localhost:3000"  # Keep this for local development
 ]
 
