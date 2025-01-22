@@ -2,16 +2,16 @@ import axios from '../axios';
 import { Budget } from '../../store/slices/budgetSlice';
 
 export const budgetApi = {
-  getBudgets: () => axios.get('/budgets'),
+  getBudgets: () => axios.get('/api/budgets'),
   
-  getBudgetNotifications: () => axios.get('/budgets/notifications'),
+  getBudgetNotifications: () => axios.get('/api/budgets/notifications'),
   
-  getBudgetSummary: () => axios.get('/budgets/summary'),
+  getBudgetSummary: () => axios.get('/api/budgets/summary'),
   
-  createBudget: (budget: Partial<Budget>) => axios.post('/budgets', budget),
+  createBudget: (budget: Partial<Budget>) => axios.post('/api/budgets', budget),
   
   updateBudget: (id: number, budget: Partial<Budget>) =>
-    axios.put(`/budgets/${id}`, budget),
+    axios.put(`/api/budgets/${id}`, budget),
   
-  deleteBudget: (id: number) => axios.delete(`/budgets/${id}`),
+  deleteBudget: (id: number) => axios.delete(`/api/budgets/${id}`),
 };

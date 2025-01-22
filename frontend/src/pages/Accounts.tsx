@@ -38,7 +38,7 @@ import { formatCurrency, formatDateTime } from '../utils/formatters';
 import { accountSchema } from '../utils/validation';
 import { usePagination } from '../utils/hooks';
 import { useFormik } from 'formik';
-import { SupportedCurrency } from '../config';
+
 
 const PAGE_SIZE_OPTIONS: number[] = [5, 10, 25, 50];
 

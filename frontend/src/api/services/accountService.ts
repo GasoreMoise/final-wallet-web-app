@@ -15,8 +15,9 @@ export interface Account {
 
 export interface CreateAccountDTO {
   name: string;
-  type: AccountType;
+  balance: number;
   currency: string;
+  type: AccountType;
   description?: string;
 }
 

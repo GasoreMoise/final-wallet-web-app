@@ -40,7 +40,7 @@ export const fetchTransactions = createAsyncThunk(
   'transactions/fetchTransactions',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/transactions');
+      const response = await axios.get('/api/transactions');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch transactions');

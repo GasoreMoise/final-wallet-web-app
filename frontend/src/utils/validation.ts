@@ -2,12 +2,9 @@ import * as yup from 'yup';
 import {
   MIN_PASSWORD_LENGTH,
   MAX_NAME_LENGTH,
-  MAX_DESCRIPTION_LENGTH,
   MAX_AMOUNT,
   ERROR_MESSAGES,
   ACCOUNT_TYPES,
-  TRANSACTION_TYPES,
-  SUPPORTED_CURRENCIES,
   CURRENCY_SYMBOLS,
 } from '../config';
 import { parseISO, isValid } from 'date-fns';

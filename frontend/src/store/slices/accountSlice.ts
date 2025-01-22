@@ -26,10 +26,10 @@ const initialState: AccountState = {
 };
 
 export const fetchAccounts = createAsyncThunk(
-  'accounts/fetchAccounts',
+  '/api/accounts/',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/accounts');
+      const response = await axios.get('/api/accounts');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch accounts');
@@ -41,7 +41,7 @@ export const createAccount = createAsyncThunk(
   'accounts/createAccount',
   async (account: Omit<Account, 'id' | 'created_at'>, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/accounts', account);
+      const response = await axios.post('/api/accounts/', account);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create account');
@@ -53,7 +53,7 @@ export const updateAccount = createAsyncThunk(
   'accounts/updateAccount',
   async ({ id, account }: { id: number; account: Partial<Account> }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/accounts/${id}`, account);
+      const response = await axios.put(`/api/accounts/${id}`, account);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update account');
@@ -65,7 +65,7 @@ export const deleteAccount = createAsyncThunk(
   'accounts/deleteAccount',
   async (id: number, { rejectWithValue }) => {
     try {
-      await axios.delete(`/accounts/${id}`);
+      await axios.delete(`/api/accounts/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to delete account');

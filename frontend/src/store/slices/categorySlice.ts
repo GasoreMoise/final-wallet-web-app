@@ -30,7 +30,7 @@ export const fetchCategories = createAsyncThunk(
   'categories/fetchCategories',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/categories');
+      const response = await axios.get('/api/categories');
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch categories');
@@ -42,7 +42,7 @@ export const createCategory = createAsyncThunk(
   'categories/createCategory',
   async (category: Omit<Category, 'id' | 'created_at' | 'updated_at' | 'owner_id'>, { rejectWithValue }) => {
     try {
-      const response = await axios.post('/categories', category);
+      const response = await axios.post('/api/categories', category);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create category');
@@ -54,7 +54,7 @@ export const updateCategory = createAsyncThunk(
   'categories/updateCategory',
   async ({ id, category }: { id: number; category: Partial<Category> }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/categories/${id}`, category);
+      const response = await axios.put(`/api/categories/${id}`, category);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to update category');
@@ -66,7 +66,7 @@ export const deleteCategory = createAsyncThunk(
   'categories/deleteCategory',
   async (id: number, { rejectWithValue }) => {
     try {
-      await axios.delete(`/categories/${id}`);
+      await axios.delete(`/api/categories/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to delete category');

@@ -1,5 +1,5 @@
 // API Configuration
-export const API_URL = 'http://localhost:8000/api';
+export const API_URL = 'http://localhost:8000';
 export const API_TIMEOUT = 10000; // 10 seconds
 
 // Auth Configuration
@@ -134,24 +134,24 @@ export const API_ENDPOINTS = {
     PROFILE: '/users/profile',
   },
   TRANSACTIONS: {
-    BASE: '/transactions',
-    BY_ID: (id: number) => `/transactions/${id}`,
+    BASE: '/api/transactions',
+    BY_ID: (id: number) => `/api/transactions/${id}`,
   },
   ACCOUNTS: {
-    BASE: '/accounts',
-    BY_ID: (id: number) => `/accounts/${id}`,
+    BASE: '/api/accounts',
+    BY_ID: (id: number) => `/api/accounts/${id}`,
   },
   CATEGORIES: {
-    BASE: '/categories',
-    BY_ID: (id: number) => `/categories/${id}`,
+    BASE: '/api/categories',
+    BY_ID: (id: number) => `.api/categories/${id}`,
   },
   BUDGETS: {
-    BASE: '/budgets',
-    BY_ID: (id: number) => `/budgets/${id}`,
+    BASE: '/api/budgets',
+    BY_ID: (id: number) => `/api/budgets/${id}`,
   },
   REPORTS: {
-    GENERATE: '/reports',
-    MONTHLY: '/reports/monthly',
-    CATEGORY: '/reports/category',
+    GENERATE: '/api/reports',
+    MONTHLY: '/api/reports/monthly',
+    CATEGORY: '/api/reports/category',
   },
 } as const;
