@@ -48,7 +48,7 @@ export const fetchDashboardData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       console.log('[Dashboard] Fetching data...');
-      const response = await axios.get('api/reports/dashboard');
+      const response = await axios.get('/api/reports/dashboard');
       console.log('[Dashboard] Data received:', response);
       return response;
     } catch (error: any) {
