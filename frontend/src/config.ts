@@ -1,5 +1,5 @@
 // API Configuration
-export const API_URL = 'http://localhost:8000/api';
+export const API_URL = 'https://final-wallet-web-app-1.onrender.com';
 export const API_TIMEOUT = 10000; // 10 seconds
 
 // Auth Configuration
