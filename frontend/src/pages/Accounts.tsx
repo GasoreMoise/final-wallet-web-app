@@ -27,6 +27,7 @@ import {
   fetchAccounts,
   createAccount,
   deleteAccount,
+  clearError,
   Account,
 } from '../store/slices/accountSlice';
 import {
@@ -38,7 +39,7 @@ import { formatCurrency, formatDateTime } from '../utils/formatters';
 import { accountSchema } from '../utils/validation';
 import { usePagination } from '../utils/hooks';
 import { useFormik } from 'formik';
-
+import { CreateAccountDto } from '../types/account.types';
 
 const PAGE_SIZE_OPTIONS: number[] = [5, 10, 25, 50];
 
@@ -54,26 +55,28 @@ const Accounts = () => {
     rowsPerPage,
     handleChangePage,
     handleChangeRowsPerPage,
-    paginatedItems,
-  } = usePagination(accounts.length, DEFAULT_PAGE_SIZE, {
-    totalItems: accounts.length,
+  } = usePagination(accounts?.length || 0, DEFAULT_PAGE_SIZE, {
+    totalItems: accounts?.length || 0,
     itemsPerPage: DEFAULT_PAGE_SIZE
   });
 
   const handleSubmit = async (values: any) => {
-    const account = {
+    const account: CreateAccountDto = {
       name: values.name,
       type: values.type,
       currency: values.currency,
       description: values.description,
-      balance: values.balance || 0,
+      balance: Number(values.balance) || 0,
       is_active: true,
     };
     
-    const result = await dispatch(createAccount(account));
-    if (createAccount.fulfilled.match(result)) {
+    try {
+      await dispatch(createAccount(account)).unwrap();
       handleClose();
       formik.resetForm();
+    } catch (err) {
+      // The error is already handled by the slice
+      console.error('Failed to create account:', err);
     }
   };
 
@@ -90,8 +93,23 @@ const Accounts = () => {
   });
 
   React.useEffect(() => {
+    console.log('[Accounts] Fetching accounts...');
     dispatch(fetchAccounts());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    console.log('[Accounts] Accounts state updated:', accounts);
+  }, [accounts]);
+
+  React.useEffect(() => {
+    if (error) {
+      // Clear error after 5 seconds
+      const timer = setTimeout(() => {
+        dispatch(clearError());
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -108,10 +126,31 @@ const Accounts = () => {
     }
   };
 
-  const displayedAccounts = accounts.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  const displayedAccounts = React.useMemo(() => {
+    console.log('[Accounts] Calculating displayed accounts:', {
+      accounts,
+      page,
+      rowsPerPage
+    });
+    
+    if (!Array.isArray(accounts) || accounts.length === 0) {
+      return [];
+    }
+    
+    const start = page * rowsPerPage;
+    const end = start + rowsPerPage;
+    return accounts
+      .slice(start, end)
+      .filter(account => account !== null && account !== undefined);
+  }, [accounts, page, rowsPerPage]);
+
+  if (isLoading && (!accounts || accounts.length === 0)) {
+    return (
+      <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+        <Typography>Loading accounts...</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -149,36 +188,49 @@ const Accounts = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {displayedAccounts.map((value: unknown) => {
-              const account = value as Account;
-              return (
-                <TableRow key={account.id}>
-                  <TableCell>{account.name}</TableCell>
-                  <TableCell>{account.type}</TableCell>
-                  <TableCell>{account.currency}</TableCell>
-                  <TableCell align="right">
-                    {formatCurrency(account.balance, account.currency)}
-                  </TableCell>
-                  <TableCell>{account.description || '-'}</TableCell>
-                  <TableCell>{formatDateTime(account.created_at)}</TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      color="error"
-                      onClick={() => handleDelete(account.id)}
-                      disabled={isLoading}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {!isLoading && (!displayedAccounts || displayedAccounts.length === 0) ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  No accounts found
+                </TableCell>
+              </TableRow>
+            ) : isLoading ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  Loading accounts...
+                </TableCell>
+              </TableRow>
+            ) : (
+              displayedAccounts.map((account) => 
+                account ? (
+                  <TableRow key={account.id}>
+                    <TableCell>{account.name}</TableCell>
+                    <TableCell>{account.type}</TableCell>
+                    <TableCell>{account.currency}</TableCell>
+                    <TableCell align="right">
+                      {formatCurrency(account.balance, account.currency)}
+                    </TableCell>
+                    <TableCell>{account.description || '-'}</TableCell>
+                    <TableCell>{formatDateTime(account.created_at)}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(account.id)}
+                        disabled={isLoading}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ) : null
+              )
+            )}
           </TableBody>
         </Table>
         <TablePagination
           rowsPerPageOptions={PAGE_SIZE_OPTIONS}
           component="div"
-          count={accounts.length}
+          count={accounts?.length || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

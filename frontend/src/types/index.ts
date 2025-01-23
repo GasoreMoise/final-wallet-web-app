@@ -38,13 +38,14 @@ export interface AccountState {
 export interface Transaction {
   id: number;
   date: string;
-  type: TransactionType;
+  type: 'income' | 'expense';
   amount: number;
-  description?: string;
-  account_id: number;
+  description: string;
   category_id: number;
+  account_id: number;
   created_at: string;
   updated_at: string;
+  owner_id: number;
 }
 
 export interface TransactionState {
@@ -57,7 +58,7 @@ export interface TransactionState {
 export interface Category {
   id: number;
   name: string;
-  type: 'INCOME' | 'EXPENSE';
+  type: 'income' | 'expense';
   description?: string;
   parent_id: number | null;
   owner_id: number;

@@ -1,6 +1,5 @@
 import React from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { FormikProps } from 'formik';
 import {
   Dialog,
   DialogTitle,
@@ -11,58 +10,39 @@ import {
   MenuItem,
   Box,
 } from '@mui/material';
-import { TRANSACTION_TYPES } from '../config';
+import { CATEGORY_TYPES } from '../config';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+
+interface CategoryFormValues {
+  name: string;
+  type: typeof CATEGORY_TYPES[number];
+  description: string;
+  color: string;
+  parent_id: number | undefined;
+}
 
 interface CategoryFormProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: any) => void;
-  initialValues?: {
-    name: string;
-    type: string;
-    description: string;
-    parent_id?: number;
-  };
-  title?: string;
+  formik: FormikProps<CategoryFormValues>;
+  isSubmitting: boolean;
 }
-
-const validationSchema = yup.object({
-  name: yup.string().required('Name is required'),
-  type: yup.string().required('Type is required'),
-  description: yup.string(),
-  parent_id: yup.number().nullable(),
-});
 
 const CategoryForm: React.FC<CategoryFormProps> = ({
   open,
   onClose,
-  onSubmit,
-  initialValues = {
-    name: '',
-    type: 'EXPENSE',
-    description: '',
-    parent_id: undefined,
-  },
-  title = 'Add Category',
+  formik,
+  isSubmitting,
 }) => {
   const { categories } = useSelector((state: RootState) => state.categories);
 
-  const formik = useFormik({
-    initialValues,
-    validationSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
-  });
-
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>Add Category</DialogTitle>
       <form onSubmit={formik.handleSubmit}>
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <TextField
               fullWidth
               id="name"
@@ -70,6 +50,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               label="Category Name"
               value={formik.values.name}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
             />
@@ -81,36 +62,15 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               label="Category Type"
               value={formik.values.type}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={formik.touched.type && Boolean(formik.errors.type)}
               helperText={formik.touched.type && formik.errors.type}
             >
-              {TRANSACTION_TYPES.map((type) => (
+              {CATEGORY_TYPES.map((type) => (
                 <MenuItem key={type} value={type}>
-                  {type}
+                  {type.toLowerCase()}
                 </MenuItem>
               ))}
-            </TextField>
-            <TextField
-              fullWidth
-              id="parent_id"
-              name="parent_id"
-              select
-              label="Parent Category"
-              value={formik.values.parent_id || ''}
-              onChange={formik.handleChange}
-              error={formik.touched.parent_id && Boolean(formik.errors.parent_id)}
-              helperText={formik.touched.parent_id && formik.errors.parent_id}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {categories
-                .filter((cat) => cat.type === formik.values.type)
-                .map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
             </TextField>
             <TextField
               fullWidth
@@ -121,14 +81,49 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               rows={3}
               value={formik.values.description}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               error={formik.touched.description && Boolean(formik.errors.description)}
               helperText={formik.touched.description && formik.errors.description}
             />
+            <TextField
+              fullWidth
+              id="color"
+              name="color"
+              label="Color"
+              type="color"
+              value={formik.values.color}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.color && Boolean(formik.errors.color)}
+              helperText={formik.touched.color && formik.errors.color}
+              sx={{ '& input': { p: 1, height: 40 } }}
+            />
+            <TextField
+              fullWidth
+              id="parent_id"
+              name="parent_id"
+              select
+              label="Parent Category"
+              value={formik.values.parent_id || ''}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.parent_id && Boolean(formik.errors.parent_id)}
+              helperText={formik.touched.parent_id && formik.errors.parent_id}
+            >
+              <MenuItem value="">None</MenuItem>
+              {categories && categories
+                .filter((cat) => cat.type === formik.values.type)
+                .map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+            </TextField>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" disabled={isSubmitting}>
             Save
           </Button>
         </DialogActions>

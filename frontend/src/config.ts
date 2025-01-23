@@ -1,6 +1,7 @@
 // API Configuration
-export const API_URL = 'https://final-wallet-web-app-1.onrender.com';
+export const API_URL = 'http://localhost:8000';
 export const API_TIMEOUT = 10000; // 10 seconds
+export const FRONTEND_URL = 'http://localhost:3000';
 
 // Auth Configuration
 export const TOKEN_KEY = 'access_token';
@@ -52,11 +53,11 @@ export const DISPLAY_DATETIME_FORMAT = 'MMM dd, yyyy HH:mm';
 export const MONTH_FORMAT = 'MMM yyyy';
 
 // Account Types
-export const ACCOUNT_TYPES = ['CHECKING', 'SAVINGS', 'CREDIT', 'INVESTMENT'] as const;
+export const ACCOUNT_TYPES = ['bank', 'mobile_money', 'cash', 'other'] as const;
 export type AccountType = typeof ACCOUNT_TYPES[number];
 
 // Transaction Types
-export const TRANSACTION_TYPES = ['INCOME', 'EXPENSE'] as const;
+export const TRANSACTION_TYPES = ['income', 'expense'] as const;
 export type TransactionType = typeof TRANSACTION_TYPES[number];
 
 // Category Types
@@ -122,16 +123,16 @@ export const ERROR_MESSAGES = {
 // API Endpoints
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    LOGOUT: '/auth/logout',
-    REFRESH: '/auth/refresh',
-    ME: '/auth/me',
+    LOGIN: '/api/auth/login',
+    REGISTER: '/api/auth/register',
+    LOGOUT: '/api/auth/logout',
+    REFRESH: '/api/auth/refresh',
+    ME: '/api/auth/me',
   },
   USERS: {
-    BASE: '/users',
-    BY_ID: (id: number) => `/users/${id}`,
-    PROFILE: '/users/profile',
+    BASE: '/api/users',
+    BY_ID: (id: number) => `/api/users/${id}`,
+    PROFILE: '/api/users/profile',
   },
   TRANSACTIONS: {
     BASE: '/api/transactions',

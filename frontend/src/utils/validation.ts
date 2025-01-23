@@ -26,6 +26,7 @@ export interface AccountFormValues {
   type: typeof ACCOUNT_TYPES[number];
   currency: keyof typeof CURRENCY_SYMBOLS;
   description?: string;
+  balance?: number;
 }
 
 // Transaction Types
@@ -42,7 +43,9 @@ export interface TransactionFormValues {
 export interface CategoryFormValues {
   name: string;
   type: 'INCOME' | 'EXPENSE';
-  description?: string;
+  description: string;
+  color: string;
+  parent_id: number | undefined;
 }
 
 // Budget Types
@@ -86,25 +89,29 @@ export const registerSchema: yup.ObjectSchema<RegisterFormValues> = yup.object()
 });
 
 // Account Schema
-export const accountSchema = yup.object({
+export const accountSchema = yup.object().shape({
   name: yup
     .string()
-    .required('Name is required')
-    .min(2, 'Name must be at least 2 characters')
-    .max(50, 'Name must not exceed 50 characters'),
+    .required('Account name is required')
+    .max(MAX_NAME_LENGTH, `Name must be at most ${MAX_NAME_LENGTH} characters`),
   type: yup
     .string()
-    .required('Type is required')
-    .oneOf(ACCOUNT_TYPES, 'Invalid account type') as unknown as yup.StringSchema<AccountFormValues['type']>,
+    .required('Account type is required')
+    .oneOf(ACCOUNT_TYPES, 'Invalid account type'),
   currency: yup
     .string()
     .required('Currency is required')
-    .oneOf(Object.keys(CURRENCY_SYMBOLS), 'Invalid currency') as unknown as yup.StringSchema<AccountFormValues['currency']>,
+    .oneOf(Object.keys(CURRENCY_SYMBOLS), 'Invalid currency'),
   description: yup
     .string()
-    .transform((value) => value === null || value === undefined ? '' : value)
-    .optional()
-    .default(''),
+    .nullable()
+    .max(255, 'Description must be at most 255 characters'),
+  balance: yup
+    .number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .nullable()
+    .min(0, 'Balance must be a positive number')
+    .max(MAX_AMOUNT, `Balance must be at most ${MAX_AMOUNT}`),
 });
 
 // Transaction Schema
@@ -119,7 +126,7 @@ export const transactionSchema = yup.object({
   type: yup
     .string()
     .required('Type is required')
-    .oneOf(['INCOME', 'EXPENSE'], 'Invalid transaction type') as unknown as yup.StringSchema<'INCOME' | 'EXPENSE'>,
+    .oneOf(['income', 'expense'], 'Invalid transaction type'),
   amount: yup
     .string()
     .required('Amount is required')
@@ -151,12 +158,24 @@ export const categorySchema = yup.object({
   type: yup
     .string()
     .required('Type is required')
-    .oneOf(['INCOME', 'EXPENSE'], 'Invalid category type') as unknown as yup.StringSchema<'INCOME' | 'EXPENSE'>,
+    .oneOf(['income', 'expense'], 'Invalid category type'),
   description: yup
     .string()
     .transform((value) => value === null || value === undefined ? '' : value)
-    .optional()
     .default(''),
+  color: yup
+    .string()
+    .required('Color is required')
+    .matches(/^#[0-9A-Fa-f]{6}$/, 'Invalid color format'),
+  parent_id: yup
+    .number()
+    .transform((value) => {
+      if (value === '' || value === null || value === undefined || isNaN(value)) {
+        return null;
+      }
+      return Number(value);
+    })
+    .nullable(),
 });
 
 // Budget Schema

@@ -20,10 +20,10 @@ app = FastAPI(
 )
 
 origins = [
+    "http://localhost:3000",  # Local development
     "https://final-wallet-web-app-git-main-gasore-nshuti-moises-projects.vercel.app",  # Vercel deployment URL
     "https://final-wallet-web-app.vercel.app",  # Production Vercel URL
-    "https://final-wallet-web-app-1.onrender.com",  # Render backend URL
-    "http://localhost:3000"  # Local development
+    "https://final-wallet-web-app-1.onrender.com"  # Render backend URL
 ]
 
 # Configure CORS
@@ -31,10 +31,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allow_headers=["Content-Type", "Authorization", "Accept"],
-    expose_headers=["Content-Type", "Authorization"],
-    max_age=3600,  # Cache preflight requests for 1 hour
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 # Include routers

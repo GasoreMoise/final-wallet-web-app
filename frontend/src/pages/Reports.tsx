@@ -607,7 +607,7 @@ const Reports: React.FC = () => {
                             align="right"
                             sx={{
                               color:
-                                transaction.type === 'INCOME'
+                                transaction.type.toLowerCase() === 'income'
                                   ? 'success.main'
                                   : 'error.main',
                             }}

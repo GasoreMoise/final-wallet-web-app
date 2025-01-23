@@ -4,7 +4,7 @@ import { API_ENDPOINTS } from '../../config';
 export interface Transaction {
   id: number;
   date: string;
-  type: 'INCOME' | 'EXPENSE';
+  type: 'income' | 'expense';
   amount: number;
   description: string;
   account_id: number;
@@ -15,25 +15,34 @@ export interface Transaction {
 
 export interface CreateTransactionDTO {
   date: string;
-  type: 'INCOME' | 'EXPENSE';
+  type: 'income' | 'expense';
   amount: number;
   description: string;
-  account_id: number;
   category_id: number;
+  account_id: number;
 }
 
-export interface TransactionFilters {
-  start_date?: string;
-  end_date?: string;
-  type?: 'INCOME' | 'EXPENSE';
-  account_id?: number;
+export interface UpdateTransactionDTO {
+  date?: string;
+  type?: 'income' | 'expense';
+  amount?: number;
+  description?: string;
   category_id?: number;
+  account_id?: number;
+}
+
+export interface GetTransactionsParams {
+  startDate?: string;
+  endDate?: string;
+  type?: 'income' | 'expense';
+  categoryId?: number;
+  accountId?: number;
   page?: number;
   limit?: number;
 }
 
 export const transactionService = {
-  async getAll(filters?: TransactionFilters): Promise<Transaction[]> {
+  async getAll(filters?: GetTransactionsParams): Promise<Transaction[]> {
     const response = await apiClient.get<Transaction[]>(API_ENDPOINTS.TRANSACTIONS.BASE, {
       params: filters,
     });
@@ -50,7 +59,7 @@ export const transactionService = {
     return response;
   },
 
-  async update(id: number, data: Partial<CreateTransactionDTO>): Promise<Transaction> {
+  async update(id: number, data: UpdateTransactionDTO): Promise<Transaction> {
     const response = await apiClient.put<Transaction>(API_ENDPOINTS.TRANSACTIONS.BY_ID(id), data);
     return response;
   },

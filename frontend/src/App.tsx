@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import theme from './theme';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -14,7 +16,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -26,7 +28,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
-      
+      </LocalizationProvider>
     </ThemeProvider>
   );
 }

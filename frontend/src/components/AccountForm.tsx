@@ -41,7 +41,7 @@ const AccountForm: React.FC<AccountFormProps> = ({
   onSubmit,
   initialValues = {
     name: '',
-    type: 'CHECKING',
+    type: 'bank',
     currency: 'USD',
     description: '',
     balance: 0,
